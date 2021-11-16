@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <title>Automation Station</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src = "javascript.js"></script>
+        <link rel="stylesheet" href="css.css">
+    </head>
+    <body>
+        <div class="container">
+            <h5 class="grey-text" id="welcome">Enter or Modify a Deposition</h5>
+        </div>
+        <!--https://materializecss.com/tabs.html-->
+        <div class="row">
+            <div class="col s12">
+              <ul class="tabs">
+                <li class="tab col s4"><a href="#test1">New Orderer</a></li>
+                <li class="tab col s4"><a class="active" href="#test2">Repeat Orderer</a></li>
+                <li class="tab col s4"><a href="#test4">Modify an Event</a></li>
+              </ul>
+            </div>
+            <div id="test1" class="col s12">
+                <div class="container">
+                    <!-- Form that Collects Data from User -->
+                    <form id="newDepoData" onsubmit="getDepoData(event)">
+                        <ul class="collapsible">
+
+                            <!-- Orderer Information -->
+                            <li class="active">
+                                <div class="collapsible-header">
+                                    <p class="flow-text red-text text-darken-3"><i class="material-icons">person_pin</i>Orderer
+                                        Information</p>
+                                </div>
+                                <div class="collapsible-body">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">person</i>
+                                        <input type="text" id="orderedBy" name="orderedBy">
+                                        <label for="orderedBy">Ordered By</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">contact_mail</i>
+                                        <input type="email" class="validate" id="orderedByEmail" name="orderedByEmail">
+                                        <label for="orderedByEmail">Orderer Email Address</label>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!-- Deposition Details -->
+                            <li>
+                                <div class="collapsible-header">
+                                    <p class="flow-text red-text text-darken-3"><i
+                                            class="material-icons">collections_bookmark</i>Deposition Details</p>
+                                </div>
+                                <div class="collapsible-body">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">person_outline</i>
+                                        <input type="text" id="witnessName" name="witnessName">
+                                        <label for="witnessName">Witness Name</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">gavel</i>
+                                        <input type="text" id="caseStyle" name="caseStyle">
+                                        <label for="caseStyle">Case Style</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">date_range</i>
+                                        <input type="date" id="depoDate" name="depoDate">
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s4">
+                                            <input type="number" value="10" id="depoHour" max="12">
+                                            <label for="depoHour">Hour</label>
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <input type="number" value="30" id="depoMinute" max="59">
+                                            <label for="depoMinute">Minute</label>
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <select id="amPm">
+                                                <option value="AM" selected>AM</option>
+                                                <option value="PM">PM</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!-- Attorney Information -->
+                            <li>
+                                <div class="collapsible-header">
+                                    <p class="flow-text red-text text-darken-3"><i class="material-icons">contacts</i>Attorney
+                                        Information</p>
+                                </div>
+                                <div class="collapsible-body">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">business</i>
+                                        <input type="text" id="firm" name="firm">
+                                        <label for="firm">Firm</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">person</i>
+                                        <input type="text" id="attorney" name="attorney">
+                                        <label for="attorney">Attorney</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">contact_mail</i>
+                                        <input type="email" class="validate" id="attorneyEmail" name="attorneyEmail">
+                                        <label for="attorneyEmail">Attorney Email</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">contact_phone</i>
+                                        <input type="text" id="attorneyPhone" name="attorneyPhone">
+                                        <label for="attorneyPhone">Attorney Phone Number</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">add_location</i>
+                                        <input type="text" id="firmAddress1" name="firmAddress1">
+                                        <label for="firmAddress1">Firm Address 1</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">add_location</i>
+                                        <input type="text" id="firmAddress2" name="firmAddress2">
+                                        <label for="firmAddress2">Firm Address 2</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s6">
+                                            <input type="text" value="San Antonio" id="city" name="city">
+                                        </div>
+                                        <div class="input-field col s2">
+                                            <input type="text" value="TX" id="state" name="state">
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <input type="text" placeholder="78232" id="zip" name="zip">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!-- Location Information -->
+                            <li>
+                                <div class="collapsible-header">
+                                    <p class="flow-text red-text text-darken-3"><i class="material-icons">map</i>Location Information
+                                    </p>
+                                </div>
+                                <div class="collapsible-body">
+                                    <blockquote>Add video conference info, enter a new location, or autofill by selecting a physical location from the
+                                        dropdown menu.</blockquote>
+                                    <div class="input-field col s12">
+                                        <select 
+                                        class="prevLocation" 
+                                        name="prevLocation" 
+                                        id="prevLocation" 
+                                        onchange='lookForVideoConference(this.value);'
+                                        >
+                                            <option value="" disabled selected>Select Location</option>
+                                            <option value="Video Conference">Video Conference</option>
+                                            <option disabled>─ ─ ─ ─ ─ ─ ─ ─ ─</option>
+                                            <? for (var i = 0; i < previousLocations.length; i++) { ?>
+                                            <option value="<?= i; ?>"><?= previousLocations[i][0]; ?></option>
+                                            <? } ?>
+                                        </select>
+                                    </div>
+                                    <div id="videoConferenceDiv" style='display:none;'>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">video_settings</i>
+                                        <input type="text" id="videoPlatform" name="videoPlatform">
+                                        <label for="videoPlatform">Video Conference Platform</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">live_tv</i>
+                                        <input type="text" id="salsAccount" name="salsAccount">
+                                        <label for="salsAccount">SALS Conference Account</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">subtitles</i>
+                                        <textarea class="materialize-textarea" id="conferenceDetails" name="conferenceDetails"></textarea>
+                                        <label for="conferenceDetails">Video Conference Details</label>
+                                    </div>
+                                    </div>
+                                    <div id="physicalLocationDiv">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">business</i>
+                                        <input type="text" id="locationFirm" name="locationFirm">
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">add_location</i>
+                                        <input type="text" id="locationAddress1" name="locationAddress1">
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">add_location</i>
+                                        <input type="text" id="locationAddress2" name="locationAddress2">
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s6">
+                                            <input type="text" value="San Antonio" id="locationCity" name="locationCity">
+                                        </div>
+                                        <div class="input-field col s2">
+                                            <input type="text" value="TX" id="locationState" name="locationState">
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <input type="text" placeholder="78232" id="locationZip" name="locationZip">
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">phone</i>
+                                        <input type="text" id="locationPhone" name="locationPhone">
+                                    </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!-- Services Information -->
+                            <li>
+                                <div class="collapsible-header">
+                                    <p class="flow-text red-text text-darken-3"><i class="material-icons">art_track</i>Services Included</p>
+                                </div>
+                                <div class="collapsible-body">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">burst_mode</i>
+                                        <input type="text" id="services" name="services">
+                                        <label for="services">Service Description</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">format_align_justify</i>
+                                        <input type="text" id="courtReporter" name="courtReporter">
+                                        <label for="courtReporter">Court Reporter</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s9">
+                                            <i class="material-icons prefix">videocam</i>
+                                            <input type="text" id="videographer" name="videographer">
+                                            <label for="videographer">Videographer</label>
+                                        </div>
+                                        <div class="input-field col s2">
+                                            <label>
+                                                <input type="checkbox" id="pip" />
+                                                <span>PIP</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <!-- Copy Attorney Information -->
+                            <li>
+                                <div class="collapsible-header">
+                                    <p class="flow-text red-text text-darken-3"><i class="material-icons">content_copy</i>Copy Attorney Information</p>
+                                </div>
+                                <div class="collapsible-body">
+                                    <blockquote>
+                                        Leave section blank if no copy attorney. You can select from dropdown to autofill from previous copy
+                                        attorney or add information manually.
+                                    </blockquote>
+                                    <div class="input-field col s12">
+                                        <select class="prevCopyAtty" name="prevCopyAtty" id="prevCopyAtty">
+                                            <option value="" disabled selected>Select Copy Attorney</option>
+                                            <? for (var i = 0; i < copyAttys.length; i++) { ?>
+                                            <option value="<?= i; ?>"><?= copyAttys[i][0]; ?></option>
+                                            <? } ?>
+                                        </select>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">person</i>
+                                        <input type="text" id="copyAttorney" name="copyAttorney">
+                                    </div>
+                                    <label class="right" for="copyAttorney">Copy Attorney</label>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">business</i>
+                                        <input type="text" id="copyFirm" name="copyFirm">
+                                    </div>
+                                    <label class="right" for="copyFirm">Copy Firm</label>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">add_location</i>
+                                        <input type="text" id="copyAddress1" name="copyAddress1">
+                                    </div>
+                                    <label class="right" for="copyAddress1">Copy Firm Address 1</label>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">add_location</i>
+                                        <input type="text" id="copyAddress2" name="copyAddress2">
+                                    </div>
+                                    <label class="right" for="copyAddress2">Copy Firm Address 2</label>
+                                    <div class="row">
+                                        <br />
+                                        <div class="input-field col s6">
+                                            <input type="text" placeholder="San Antonio" id="copyCity" name="copyCity">
+                                        </div>
+                                        <div class="input-field col s2">
+                                            <input type="text" placeholder="TX" id="copyState" name="copyState">
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <input type="text" placeholder="78232" id="copyZip" name="copyZip">
+                                        </div>
+                                        <div class="input-field col s12">
+                                            <i class="material-icons prefix">phone</i>
+                                            <input type="text" id="copyPhone" name="copyPhone">
+                                        </div>
+                                        <div class="input-field col s12">
+                                            <i class="material-icons prefix">contact_mail</i>
+                                            <input type="email" class="validate" id="copyEmail" name="copyEmail">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <!-- Confirmation Email Option -->
+                        <div class="container">
+                            <label>
+                                <input type="checkbox" id="sendConfirmation" />
+                                <span>Send confirmation email to orderer?</span>
+                            </label>
+                            <div class="input-field">
+                                <input type="text" id="confirmationCC" name="confirmationCC">
+                                <label for="confirmationCC">(Optional) CC for Confirmation Email</label>
+                            </div>
+                        </div>
+
+                        <!-- Submission Button -->
+                        <div class="container center">
+                            <br />
+                            <button class="btn" type="submit">Save Deposition</button>
+                            <br />
+                            <br />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="test2" class="col s12">
+                
+            </div>
+            <div id="test4" class="col s12">
+
+            </div>
+        </div>
+
+
+    </body>         
+</html>
+      
