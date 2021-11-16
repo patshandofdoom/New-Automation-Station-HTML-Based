@@ -7,18 +7,12 @@
 
         <title>Automation Station</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                $('.tabs').tabs();
-            });
-        </script>
+
         <link rel="stylesheet" href="css.css">
         <style type="text/css">
-            #welcome{
-                text-align: center;
-            }
             .container{
                 text-align: center;
             }
@@ -32,8 +26,8 @@
         <div class="row">
             <div class="col s12">
               <ul class="tabs">
-                <li class="tab col s4"><a href="#test1">New Orderer</a></li>
-                <li class="tab col s4"><a class="active" href="#test2">Repeat Orderer</a></li>
+                <li class="tab col s4"><a class="active" href="#test1">New Orderer</a></li>
+                <li class="tab col s4"><a href="#test2">Repeat Orderer</a></li>
                 <li class="tab col s4"><a href="#test4">Modify an Event</a></li>
               </ul>
             </div>
@@ -42,12 +36,10 @@
                     <!-- Form that Collects Data from User -->
                     <form id="newDepoData" onsubmit="getDepoData(event)">
                         <ul class="collapsible">
-
                             <!-- Orderer Information -->
                             <li class="active">
                                 <div class="collapsible-header">
-                                    <p class="flow-text red-text text-darken-3"><i class="material-icons">person_pin</i>Orderer
-                                        Information</p>
+                                    <p class="flow-text red-text text-darken-3"><i class="material-icons">person_pin</i>Orderer Information</p>
                                 </div>
                                 <div class="collapsible-body">
                                     <div class="input-field col s12">
@@ -66,16 +58,15 @@
                             <!-- Deposition Details -->
                             <li>
                                 <div class="collapsible-header">
-                                    <p class="flow-text red-text text-darken-3"><i
-                                            class="material-icons">collections_bookmark</i>Deposition Details</p>
+                                    <p class="flow-text red-text text-darken-3"><i class="material-icons">collections_bookmark</i>Deposition Details</p>
                                 </div>
                                 <div class="collapsible-body">
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">person_outline</i>
                                         <input type="text" id="witnessName" name="witnessName">
                                         <label for="witnessName">Witness Name</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">gavel</i>
                                         <input type="text" id="caseStyle" name="caseStyle">
                                         <label for="caseStyle">Case Style</label>
@@ -85,20 +76,25 @@
                                         <input type="date" id="depoDate" name="depoDate">
                                     </div>
                                     <div class="row">
-                                        <div class="input-field col s4">
+                                        <div class="input-field col s3">
                                             <input type="number" value="10" id="depoHour" max="12">
                                             <label for="depoHour">Hour</label>
                                         </div>
-                                        <div class="input-field col s4">
+                                        <div class="input-field col s3">
                                             <input type="number" value="30" id="depoMinute" max="59">
                                             <label for="depoMinute">Minute</label>
                                         </div>
-                                        <div class="input-field col s4">
+                                        <div class="input-field col s3">
                                             <select id="amPm">
                                                 <option value="AM" selected>AM</option>
                                                 <option value="PM">PM</option>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">access_time</i>
+                                        <input type="text" class="timepicker" id="timeOfAppointment">
+                                        <label for="timeOfAppointment">Choose time</label>
                                     </div>
                                 </div>
                             </li>
@@ -110,32 +106,32 @@
                                         Information</p>
                                 </div>
                                 <div class="collapsible-body">
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">business</i>
                                         <input type="text" id="firm" name="firm">
                                         <label for="firm">Firm</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">person</i>
                                         <input type="text" id="attorney" name="attorney">
                                         <label for="attorney">Attorney</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">contact_mail</i>
                                         <input type="email" class="validate" id="attorneyEmail" name="attorneyEmail">
                                         <label for="attorneyEmail">Attorney Email</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">contact_phone</i>
                                         <input type="text" id="attorneyPhone" name="attorneyPhone">
                                         <label for="attorneyPhone">Attorney Phone Number</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">add_location</i>
                                         <input type="text" id="firmAddress1" name="firmAddress1">
                                         <label for="firmAddress1">Firm Address 1</label>
                                     </div>
-                                    <div class="input-field col s12">
+                                    <div class="input-field col s6">
                                         <i class="material-icons prefix">add_location</i>
                                         <input type="text" id="firmAddress2" name="firmAddress2">
                                         <label for="firmAddress2">Firm Address 2</label>
@@ -163,6 +159,7 @@
                                 <div class="collapsible-body">
                                     <blockquote>Add video conference info, enter a new location, or autofill by selecting a physical location from the
                                         dropdown menu.</blockquote>
+
                                     <div class="input-field col s12">
                                         <select 
                                         class="prevLocation" 
@@ -178,6 +175,7 @@
                                             <? } ?>
                                         </select>
                                     </div>
+
                                     <div id="videoConferenceDiv" style='display:none;'>
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">video_settings</i>
@@ -195,6 +193,7 @@
                                         <label for="conferenceDetails">Video Conference Details</label>
                                     </div>
                                     </div>
+
                                     <div id="physicalLocationDiv">
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">business</i>
@@ -343,15 +342,30 @@
                     </form>
                 </div>
             </div>
-            <div id="test2" class="col s12">
-                
+            <div id="test2" class="center-align col s12">
+                <ul class="tabs">
+                    <li class="tab col s2"></li>
+                    <li class="tab col s4"><a href="#newOrderer">New Orderer</a></li>
+                    <li class="tab col s4"><a class="active" href="#oldOrderer">Repeat Orderer</a></li>
+                </ul> 
+                <div id="newOrderer" class="col s12">
+                    new Orderer
+                </div>
+                <div id="oldOrderer" class="col s12">
+                    Old Orderer
+                </div> 
             </div>
             <div id="test4" class="col s12">
 
             </div>
         </div>
-
+        <script>
+            $(document).ready(function() {
+                $('.tabs').tabs();
+                $('.collapsible').collapsible();
+                $('.timepicker').timepicker();
+            });
+        </script>
 
     </body>         
 </html>
-      
