@@ -6,76 +6,92 @@
 * @params {multiple} strings, bool Values from the form deployed through Google Sheet.
 * @return Sequential array of values.
 */
-function getNewDepositionData(orderedBy,orderedByEmail, witnessName, caseStyle, depoDate, depoHour, depoMinute, amPm, firm, attorney, attorneyEmail, attorneyPhone, firmAddress1, firmAddress2, city, state, zip, locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, locationPhone, services, courtReporter, videographer, pip, copyAttorney, copyFirm, copyAddress1, copyAddress2, copyCity, copyState, copyZip, copyPhone, copyEmail, sendConfirmation, confirmationCC, videoPlatform, salsAccount, conferenceDetails) {
+function getNewDepositionData(depoObject) {
   // Updates progress to user through the sidebar UI
   SpreadsheetApp.getActiveSpreadsheet().toast('🚀️ Automation initiated');
   
   // Checks for orderedByEmail, if blank, exits script and alerts user
-  if (orderedByEmail == '') {
+  if (!depoObject.orderedByEmail) {
     SpreadsheetApp.getActiveSpreadsheet().toast('⚠️️ Error: orderer email address was not included. Please add it.');
     return;
   };
   
   // Concatenates deposition time-related variables for print formatting
-  var depoTime = depoHour + ':' + depoMinute + ' ' + amPm;
+  var depoTime = depoObject.depoHour + ':' + depoObject.depoMinute + ' ' + depoObject.amPm;
   
   // Converts PIP boolean value into "yes" or "no" string
-  if (pip === true) {
-    pip = 'Yes';
+  if (depoObject.pip === true) {
+    depoObject.pip = 'Yes';
   } else {
-    pip = 'No';
+    depoObject.pip = 'No';
   };
   
   // Converts location information to video conferencing info if appropriate
-  if (videoPlatform.length > 2) {
-    locationFirm = 'via ' + videoPlatform;
+  if (depoObject.videoPlatform.length > 2) {
+    depoObject.locationFirm = 'via ' + depoObject.videoPlatform;
   };
 
   //function to get the next unique key
   let uniqueKey = iterateUniqueKey();
+  depoObject.uniqueKey = uniqueKey;
 
+  //###########################################
 
+  var newScheduledDepo= ['🟢 Current', depoObject.depoDate, depoObject.witnessName];
 
+  if(depoObject.depoFunction == "getRepeatDeposition"){
+    newScheduledDepo.push(depoObject.previousOrderer, depoObject.ordererEmail, depoObject.caseStyle, depoTime);
 
+    // Gets firm and attorney information from previous orderer, pushes it into the newScheduledDepo array
+    var infoFromPreviousOrderer = firmInformationFromOrderer(depoObject.previousOrderer);
+    for (var i = 0; i < infoFromPreviousOrderer.length; i++) {
+      newScheduledDepo.push(infoFromPreviousOrderer[i]);
+    };
+    SpreadsheetApp.getActiveSpreadsheet().toast('📙️ Found attorney and firm info');
 
+  } 
 
-  
+  else{
+    newScheduledDepo.push(depoObject.orderedBy, depoObject.orderedByEmail, depoObject.caseStyle, depoTime, depoObject.firm, depoObject.attorney, depoObject.firmAddress1, depoObject.firmAddress2, depoObject.city, depoObject.state, depoObject.zip, depoObject.attorneyPhone, depoObject.attorneyEmaila);
+  }
 
+  newScheduledDepo.push(depoObject.locationFirm, depoObject.locationAddress1, depoObject.locationAddress2, depoObject.locationCity, depoObject.locationState, depoObject.locationZip, depoObject.locationPhone, depoObject.services, depoObject.courtReporter, depoObject.videographer, depoObject.pip, depoObject.copyAttorney, depoObject.copyFirm, depoObject.copyAddress1, depoObject.copyAddress2, depoObject.copyCity, depoObject.copyState, depoObject.copyZip, depoObject.copyPhone, depoObject.copyEmail, "", "", "", "", depoObject.conferenceDetails, depoObject.uniqueKey)
 
-  // Begins construction of deposition information array
-  var newScheduledDepo = ['🟢 Current', depoDate, witnessName, orderedBy, orderedByEmail, caseStyle, depoTime, firm, attorney, firmAddress1, firmAddress2, city, state, zip, attorneyPhone, attorneyEmail, locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, locationPhone, services, courtReporter, videographer, pip, copyAttorney, copyFirm, copyAddress1, copyAddress2, copyCity, copyState, copyZip, copyPhone,copyEmail,,,,,conferenceDetails,uniqueKey];
+  //###########################################
+
 
   // Formats the array for Google Sheets setValue() method, calls printing function
-  Logger.log([orderedBy,orderedByEmail, witnessName, caseStyle, depoDate, depoHour, depoMinute, amPm, firm, attorney, attorneyEmail, attorneyPhone, firmAddress1, firmAddress2, city, state, zip, locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, locationPhone, services, courtReporter, videographer, pip, copyAttorney, copyFirm, copyAddress1, copyAddress2, copyCity, copyState, copyZip, copyPhone, copyEmail, sendConfirmation, confirmationCC, videoPlatform, salsAccount, conferenceDetails,"getNewDepositionData"]);
+  Logger.log([depoObject.orderedBy,depoObject.orderedByEmail, depoObject.witnessName, depoObject.caseStyle, depoObject.depoDate, depoObject.depoHour, depoObject.depoMinute, depoObject.amPm, depoObject.firm, depoObject.attorney, depoObject.attorneyEmail, depoObject.attorneyPhone, depoObject.firmAddress1, depoObject.firmAddress2, depoObject.city, depoObject.state, depoObject.zip, depoObject.locationFirm, depoObject.locationAddress1, depoObject.locationAddress2, depoObject.locationCity, depoObject.locationState, depoObject.locationZip, depoObject.locationPhone, depoObject.services, depoObject.courtReporter, depoObject.videographer, depoObject.pip, depoObject.copyAttorney, depoObject.copyFirm, depoObject.copyAddress1, depoObject.copyAddress2, depoObject.copyCity, depoObject.copyState, depoObject.copyZip, depoObject.copyPhone, depoObject.copyEmail, depoObject.sendConfirmation, depoObject.confirmationCC, depoObject.videoPlatform, depoObject.salsAccount, depoObject.conferenceDetails,"getNewDepositionData"]);
 
   var formattedArray = [newScheduledDepo];
   printNewDeposition(formattedArray);
   SpreadsheetApp.getActiveSpreadsheet().toast('➕️ Depo added to Schedule a depo sheet');
   
+  //#######################
 
   // Adds deposition to the Current List Sheet
-  updateCurrentList (depoDate, witnessName, firm, city, courtReporter, videographer, pip,uniqueKey);
+  updateCurrentList (depoObject.depoDate, depoObject.witnessName, depoObject.firm, depoObject.city, depoObject.courtReporter, depoObject.videographer, depoObject.pip,depoObject.uniqueKey);
   SpreadsheetApp.getActiveSpreadsheet().toast('🟢 Depo added to Current List sheet');
   
 
   // Adds deposition information to Video Worksheet
-  updateVideoWorksheet(locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, depoDate, witnessName, caseStyle, depoTime, courtReporter, videographer, firm, attorney, attorneyEmail, firmAddress1, firmAddress2, city, state, zip, orderedBy, services, copyAttorney, copyFirm, copyAddress1, copyAddress2, copyCity, copyState, copyZip, copyEmail);
+  updateVideoWorksheet(depoObject.locationFirm, depoObject.locationAddress1, depoObject.locationAddress2, depoObject.locationCity, depoObject.locationState, depoObject.locationZip, depoObject.depoDate, depoObject.witnessName, depoObject.caseStyle, depoTime, depoObject.courtReporter, depoObject.videographer, depoObject.firm, depoObject.attorney, depoObject.attorneyEmail, depoObject.firmAddress1, depoObject.firmAddress2, depoObject.city, depoObject.state, depoObject.zip, depoObject.orderedBy, depoObject.services, depoObject.copyAttorney, depoObject.copyFirm, depoObject.copyAddress1, depoObject.copyAddress2, depoObject.copyCity, depoObject.copyState, depoObject.copyZip, depoObject.copyEmail);
   SpreadsheetApp.getActiveSpreadsheet().toast('🎥 Video Worksheet updated');
   
   // Adds deposition information to CR Worksheet
-  updateCRWorksheet(locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, depoDate, witnessName, caseStyle, depoTime, courtReporter, firm, attorney, attorneyEmail, firmAddress1, firmAddress2, city, state, zip, attorneyPhone, orderedBy, services, copyAttorney, copyFirm, copyAddress1, copyAddress2, copyCity, copyState, copyZip, copyEmail, copyPhone);
+  //updateCRWorksheet(locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, depoDate, witnessName, caseStyle, depoTime, courtReporter, firm, attorney, attorneyEmail, firmAddress1, firmAddress2, city, state, zip, attorneyPhone, orderedBy, services, copyAttorney, copyFirm, copyAddress1, copyAddress2, copyCity, copyState, copyZip, copyEmail, copyPhone);
   SpreadsheetApp.getActiveSpreadsheet().toast('✍️ CR Worksheet updated');
 
   // Adds deposition information to Confirmation of Scheduling  
-  updateConfirmationOfScheduling(locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, depoDate, witnessName, caseStyle, depoTime, courtReporter, firm, attorney, firmAddress1, firmAddress2, city, state, zip, attorneyPhone, orderedBy, videographer, pip);
+  //updateConfirmationOfScheduling(locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, depoDate, witnessName, caseStyle, depoTime, courtReporter, firm, attorney, firmAddress1, firmAddress2, city, state, zip, attorneyPhone, orderedBy, videographer, pip);
   SpreadsheetApp.getActiveSpreadsheet().toast('🗓 Confirmation of Scheduling updated');
 
   // Adds the deposition to the Services calendar and logs it for internal record keeping.
-  var event = addEvent(orderedBy, witnessName, caseStyle, depoDate, depoHour, depoMinute, amPm, firm, attorney, firmAddress1, firmAddress2, city, state, zip, locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, services, courtReporter, videographer, pip, videoPlatform, salsAccount, conferenceDetails);
+  var event = addEvent(depoObject.orderedBy, depoObject.witnessName, depoObject.caseStyle, depoObject.depoDate, depoObject.depoHour, depoObject.depoMinute, depoObject.amPm, depoObject.firm, depoObject.attorney, depoObject.firmAddress1, depoObject.firmAddress2, depoObject.city, depoObject.state, depoObject.zip, depoObject.locationFirm, depoObject.locationAddress1, depoObject.locationAddress2, depoObject.locationCity, depoObject.locationState, depoObject.locationZip, depoObject.services, depoObject.courtReporter, depoObject.videographer, depoObject.pip, depoObject.videoPlatform, depoObject.salsAccount, depoObject.conferenceDetails);
 
   Logger.log('event added')
   
-  addOrderToLog(orderedBy, firm);
+  addOrderToLog(depoObject.orderedBy, depoObject.firm);
   
   // If it was checked in the sidebar, sends a confirmation email to orderer
   /*
@@ -110,33 +126,7 @@ function getRepeatDepositionData(previousOrderer, witnessName, caseStyle, depoDa
   };
   SpreadsheetApp.getActiveSpreadsheet().toast('📙️ Found attorney and firm info');
 
-  //pushes all info into the array that we want to store
-  newScheduledDepo.push(locationFirm); 
-  newScheduledDepo.push(locationAddress1); 
-  newScheduledDepo.push(locationAddress2); 
-  newScheduledDepo.push(locationCity); 
-  newScheduledDepo.push(locationState); 
-  newScheduledDepo.push(locationZip); 
-  newScheduledDepo.push(locationPhone); 
-  newScheduledDepo.push(services); 
-  newScheduledDepo.push(courtReporter); 
-  newScheduledDepo.push(videographer); 
-  newScheduledDepo.push(pip);
-  newScheduledDepo.push(copyAttorney);
-  newScheduledDepo.push(copyFirm);
-  newScheduledDepo.push(copyAddress1);
-  newScheduledDepo.push(copyAddress2);
-  newScheduledDepo.push(copyCity);
-  newScheduledDepo.push(copyState);
-  newScheduledDepo.push(copyZip); 
-  newScheduledDepo.push(copyPhone);
-  newScheduledDepo.push(copyEmail);
-  newScheduledDepo.push('');
-  newScheduledDepo.push('');
-  newScheduledDepo.push('');
-  newScheduledDepo.push('');
-  newScheduledDepo.push(conferenceDetails);
-  newScheduledDepo.push(uniqueKey);
+ 
 
   // Formats the array for Google Sheets setValue() method, calls printing function
   Logger.log([previousOrderer, witnessName, caseStyle, depoDate, depoHour, depoMinute, amPm, locationFirm, locationAddress1, locationAddress2, locationCity, locationState, locationZip, locationPhone, services, courtReporter, videographer, pip, copyAttorney, copyFirm, copyAddress1, copyAddress2, copyCity, copyState, copyZip, copyPhone, copyEmail, sendConfirmation, confirmationCC, videoPlatform, salsAccount, conferenceDetails,"getRepeatDepositionData"]);
@@ -569,16 +559,9 @@ function firmInformationFromOrderer (orderer) {
   var attyAndFirmInformation = [];
   for (var i = 0; i < allScheduledRows.length; i++) {
     if (allScheduledRows[i][3] === orderer) {
-      // allScheduledRows[i][n] because columns 7 - 15 contain the desired information on the "Schedule a depo" sheet
-      attyAndFirmInformation.push(allScheduledRows[i][7]);
-      attyAndFirmInformation.push(allScheduledRows[i][8]);
-      attyAndFirmInformation.push(allScheduledRows[i][9]);
-      attyAndFirmInformation.push(allScheduledRows[i][10]);
-      attyAndFirmInformation.push(allScheduledRows[i][11]);
-      attyAndFirmInformation.push(allScheduledRows[i][12]);
-      attyAndFirmInformation.push(allScheduledRows[i][13]);
-      attyAndFirmInformation.push(allScheduledRows[i][14]);
-      attyAndFirmInformation.push(allScheduledRows[i][15]);
+        for(var j = 7; j<15; j++){
+          attyAndFirmInformation.push(allScheduledRows[i][j]);
+        }
       break;
     };
   };
